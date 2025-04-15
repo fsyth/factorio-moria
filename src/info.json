@@ -1,0 +1,11 @@
+{
+    "name": "moria",
+    "version": "2.0.0",
+    "title": "Moria",
+    "author": "forsyth",
+    "contact": "",
+    "homepage": "https://mods.factorio.com/mod/moria",
+    "factorio_version": "2.0",
+    "dependencies": ["base >= 2.0", "space-age >= 2.0"],
+    "description": "You fear to go into those mines. The dwarves delved too greedily and too deep. You know what they awoke in the darkness of Khazad-dum... shadow and flame."
+}
