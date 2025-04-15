@@ -39,6 +39,42 @@ function make_item_spoil_into_entity(arg)
 end
 
 
+-- arg.from          (string)  Item name to set to spoil
+-- arg.time          (int)     Spoilage time in ticks
+-- [arg.per=5]       (int)     Number of items needed to spoil per explosion
+-- [arg.damage=100]  (int)     Area of effect damage
+-- [arg.radius=3]    (float)   Area of effect radius
+function make_item_spoil_into_explosion(arg)
+  local item = data.raw.item[arg.from]
+  item.spoil_ticks = arg.time
+  item.spoil_to_trigger_result = {
+    items_per_trigger = arg.per or 5,
+    trigger = {
+      {
+        action_delivery = {
+          target_effects = {
+            {
+              damage = {
+                amount = arg.damage or 100,
+                type = "explosion"
+              },
+              type = "damage"
+            },
+            {
+              entity_name = "explosion",
+              type = "create-entity"
+            }
+          },
+          type = "instant"
+        },
+        radius = arg.radius or 3,
+        type = "area"
+      }
+    }
+  }
+end
+
+
 local seconds = 60  -- in ticks at 60 ups
 local minutes = 60 * seconds
 local hours   = 60 * minutes
@@ -55,7 +91,7 @@ make_item_spoil_into_entity{from="processing-unit",    to="big-wriggler-pentapod
 make_item_spoil_into_entity{from="coal",               to="big-spitter",              time= 60 * minutes,                 }
 make_item_spoil_into_entity{from="scrap",              to="construction-robot",       time= 12 * minutes, as_enemy=false, }
 
--- make_item_spoil_into_explosion{from="calcite", time= 30 * seconds, }
+make_item_spoil_into_explosion{from="calcite", time=30 * seconds, per=16, damage=46, }
 
 -- make_item_spoil_into_tile("stone",              60 * minutes, "hazard-concrete-left")
 
