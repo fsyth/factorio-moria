@@ -21,15 +21,13 @@ function make_item_spoil_into_entity(arg)
     trigger = {
       action_delivery = {
         source_effects = {
-          {
-            affects_target = true,
-            as_enemy = arg.as_enemy == nil or arg.as_enemy,
-            entity_name = arg.to,
-            find_non_colliding_position = true,
-            offset_deviation = {{ -1, -1 }, { 1, 1 }},
-            show_in_tooltip = true,
-            type = "create-entity"
-          }
+          affects_target = true,
+          as_enemy = arg.as_enemy == nil or arg.as_enemy,
+          entity_name = arg.to,
+          find_non_colliding_position = true,
+          offset_deviation = {{ -1, -1 }, { 1, 1 }},
+          show_in_tooltip = true,
+          type = "create-entity"
         },
         type = "instant"
       },
@@ -42,34 +40,23 @@ end
 -- arg.from          (string)  Item name to set to spoil
 -- arg.time          (int)     Spoilage time in ticks
 -- [arg.per=5]       (int)     Number of items needed to spoil per explosion
--- [arg.damage=100]  (int)     Area of effect damage
--- [arg.radius=3]    (float)   Area of effect radius
 function make_item_spoil_into_explosion(arg)
   local item = data.raw.item[arg.from]
   item.spoil_ticks = arg.time
   item.spoil_to_trigger_result = {
     items_per_trigger = arg.per or 5,
     trigger = {
-      {
-        action_delivery = {
-          target_effects = {
-            {
-              damage = {
-                amount = arg.damage or 100,
-                type = "explosion"
-              },
-              type = "damage"
-            },
-            {
-              entity_name = "explosion",
-              type = "create-entity"
-            }
-          },
-          type = "instant"
+      action_delivery = {
+        target_effects = {
+          entity_name = "grenade-explosion",
+          show_in_tooltip = true,
+          type = "create-entity"
         },
-        radius = arg.radius or 3,
-        type = "area"
-      }
+        projectile = "cluster-grenade",
+        starting_speed = 0.3,
+        type = "projectile"
+      },
+      type = "direct"
     }
   }
 end
@@ -91,7 +78,7 @@ make_item_spoil_into_entity{from="processing-unit",    to="big-wriggler-pentapod
 make_item_spoil_into_entity{from="coal",               to="big-spitter",              time= 60 * minutes,                 }
 make_item_spoil_into_entity{from="scrap",              to="construction-robot",       time= 12 * minutes, as_enemy=false, }
 
-make_item_spoil_into_explosion{from="calcite", time=30 * seconds, per=16, damage=46, }
+make_item_spoil_into_explosion{from="calcite", time=30 * seconds, per=100, }
 
 -- make_item_spoil_into_tile("stone",              60 * minutes, "hazard-concrete-left")
 
